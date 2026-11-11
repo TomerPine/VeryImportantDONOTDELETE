@@ -1,10 +1,3 @@
-import java.util.ArrayList;
-
-/**
- * A Runnable task that checks if a subset of an {@link ArrayList} of integers
- * sums up to a target value {@code b} using recursion.
- * It coordinates with a {@link SharedData} object to share state across multiple threads.
- */
 public class ThreadCheckArray implements Runnable {
     private boolean flag;
     private boolean[] winArray;
@@ -41,15 +34,15 @@ public class ThreadCheckArray implements Runnable {
             if (sd.getFlag()) return;
         }
         if (n == 1) {
-            if(b == 0 || b == array.get(n-1)) {
+            if(b == 0 || b == array.get(n - 1)) {
                 flag = true;
                 synchronized (sd) { sd.setFlag(true); }
             }
-            if (b == array.get(n-1)) winArray[n-1] = true;
+            if (b == array.get(n - 1)) winArray[n - 1] = true;
             return;
         }
 
-        rec(n-1, b - array.get(n-1));
+        rec(n - 1, b - array.get(n - 1));
         if (flag) winArray[n-1] = true;
         synchronized (sd) {
             if (sd.getFlag()) return;
@@ -65,9 +58,9 @@ public class ThreadCheckArray implements Runnable {
     public void run() {
         if (array.size() != 1)
             if (Thread.currentThread().getName().equals("thread1"))
-                rec(array.size()-1, b - array.get(array.size() - 1));
+                rec(array.size() - 1, b - array.get(array.size() - 1));
             else
-                rec(array.size()-1, b);
+                rec(array.size() - 1, b);
         if (array.size() == 1)
             if (b == array.get(0) && !flag) {
                 winArray[0] = true;
