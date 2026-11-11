@@ -1,9 +1,17 @@
+import java.util.ArrayList;
+
+/**
+ * A Runnable task that checks if a subset of an {@link ArrayList} of integers
+ * sums up to a target value {@code b} using recursion.
+ * It coordinates with a {@link SharedData} object to share state across multiple threads.
+ */
+
 public class ThreadCheckArray implements Runnable {
-    private boolean flag;
-    private boolean[] winArray;
     SharedData sd;
     ArrayList<Integer> array;
     int b;
+    private boolean flag;
+    private boolean[] winArray;
 
     /**
      * Constructs a new {@code ThreadCheckArray} task.
@@ -16,7 +24,7 @@ public class ThreadCheckArray implements Runnable {
     public ThreadCheckArray(SharedData sd) {
         this.sd = sd;
         synchronized (sd) {
-            array = sd.getArrayList();
+            array = sd.getArray();
             b = sd.getB();
         }
         winArray = new boolean[array.size()];
@@ -34,20 +42,22 @@ public class ThreadCheckArray implements Runnable {
             if (sd.getFlag()) return;
         }
         if (n == 1) {
-            if(b == 0 || b == array.get(n - 1)) {
+            if (b == 0 || b == array.get(n - 1)) {
                 flag = true;
-                synchronized (sd) { sd.setFlag(true); }
+                synchronized (sd) {
+                    sd.setFlag(true);
+                }
             }
             if (b == array.get(n - 1)) winArray[n - 1] = true;
             return;
         }
 
         rec(n - 1, b - array.get(n - 1));
-        if (flag) winArray[n-1] = true;
+        if (flag) winArray[n - 1] = true;
         synchronized (sd) {
             if (sd.getFlag()) return;
         }
-        rec(n-1, b);
+        rec(n - 1, b);
     }
 
     /**
@@ -65,12 +75,16 @@ public class ThreadCheckArray implements Runnable {
             if (b == array.get(0) && !flag) {
                 winArray[0] = true;
                 flag = true;
-                synchronized (sd) { sd.setFlag(true); }
+                synchronized (sd) {
+                    sd.setFlag(true);
+                }
             }
         if (flag) {
             if (Thread.currentThread().getName().equals("thread1"))
                 winArray[array.size() - 1] = true;
-            synchronized (sd) { sd.setWinArray(winArray); }
+            synchronized (sd) {
+                sd.setWinArray(winArray);
+            }
         }
     }
 }

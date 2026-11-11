@@ -12,7 +12,7 @@ public class TestThreadCheckArray {
         try (Scanner input = new Scanner(System.in)) {
             Thread thread1, thread2;
             System.out.println("Enter array size");
-            int num  = input.nextInt();
+            int num = input.nextInt();
             ArrayList<Integer> array = new ArrayList<>(num);
             System.out.println("Enter numbers for array");
 
@@ -40,7 +40,7 @@ public class TestThreadCheckArray {
             }
             System.out.println("Solution for b : " + sd.getB() + ",n = " + sd.getArray().size());
             System.out.print("I:    ");
-            for(int index = 0; index < sd.getArray().size() ; index++)
+            for (int index = 0; index < sd.getArray().size(); index++)
                 System.out.print(index + "    ");
             System.out.println();
             System.out.print("A:    ");
